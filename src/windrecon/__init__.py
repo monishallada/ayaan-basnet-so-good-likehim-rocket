@@ -1,0 +1,3 @@
+"""
+WindRecon package initialization.
+"""

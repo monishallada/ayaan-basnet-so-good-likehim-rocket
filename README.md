@@ -31,9 +31,18 @@ python -m windrecon.train --data data/sim_dataset.npz --epochs 25 --out checkpoi
 
 # Infer wind profile from held-out telemetry
 python -m windrecon.inference --model checkpoints/model.pt --data data/sim_dataset.npz --index 10 --out outputs/wind_profile.csv
+
+# Launch local web UI (no API keys needed)
+uvicorn windrecon.web.app:app --reload --port 8000
+# then open http://localhost:8000 to upload a telemetry .npz and run reconstruction via the local model checkpoint
 ```
 
 ## Notes
 - The EKF/Bayesian modules are stubs for future work; primary path is the physics-informed GRU.
 - Replace the synthetic generator with real telemetry by formatting to the expected arrays in `inference.py`.
 - For GPU training, install the CUDA-enabled PyTorch wheel matching your system.
+
+## Deploying a free UI without API keys
+- **Local:** Use the FastAPI + HTML UI via `uvicorn windrecon.web.app:app --port 8000`. All computation is on your machine; no external services.
+- **Vercel frontend + separate backend (free-tier):** Vercel cannot run this PyTorch backend directly. Host a small Python backend (e.g., Fly.io, Render free tier, Railway hobby) with this repo and `uvicorn`. Point a simple static frontend on Vercel to the backend API `/api/infer`. No API keys are required; the model runs on the backend VM.
+- **Streamlit/Gradio alternative:** You can wrap `windrecon.inference` in Streamlit for one-click local use; also free on Streamlit Community Cloud.

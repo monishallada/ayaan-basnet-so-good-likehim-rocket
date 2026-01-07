@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WindRecon</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>WindRecon</h1>
+      <p>Physics-informed wind shear reconstruction from rocket telemetry.</p>
+    </header>
+
+    <section class="card">
+      <h2>Upload Telemetry</h2>
+      <form id="infer-form">
+        <label>Telemetry dataset (.npz)
+          <input type="file" name="file" accept=".npz" required />
+        </label>
+        <label>Model checkpoint path (server-side)
+          <input type="text" name="model_path" placeholder="checkpoints/model.pt" required />
+        </label>
+        <label>Flight index
+          <input type="number" name="index" value="0" min="0" />
+        </label>
+        <label>MC samples (uncertainty)
+          <input type="number" name="mc" value="1" min="1" max="10" />
+        </label>
+        <button type="submit">Reconstruct</button>
+      </form>
+      <div id="status"></div>
+    </section>
+
+    <section class="card">
+      <h2>Results</h2>
+      <table id="results-table">
+        <thead>
+          <tr>
+            <th>Alt (m)</th>
+            <th>u (m/s)</th>
+            <th>v (m/s)</th>
+            <th>std u</th>
+            <th>std v</th>
+            <th>true u</th>
+            <th>true v</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById("infer-form");
+    const statusEl = document.getElementById("status");
+    const tbody = document.querySelector("#results-table tbody");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "Running inference...";
+      tbody.innerHTML = "";
+
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch("/api/infer", { method: "POST", body: formData });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || "Request failed");
+        }
+        const data = await res.json();
+        data.profile.forEach((row) => {
+          const tr = document.createElement("tr");
+          ["altitude_m", "wind_u_mps", "wind_v_mps", "std_u", "std_v", "true_u", "true_v"].forEach((k) => {
+            const td = document.createElement("td");
+            td.textContent = row[k].toFixed ? row[k].toFixed(2) : row[k];
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        statusEl.textContent = "Done.";
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

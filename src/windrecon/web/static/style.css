@@ -1,0 +1,15 @@
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+body { margin: 0; background: #0f172a; color: #e2e8f0; }
+.container { max-width: 960px; margin: auto; padding: 24px; }
+header { margin-bottom: 20px; }
+h1 { margin: 0 0 8px 0; }
+.card { background: #1e293b; padding: 16px; border-radius: 12px; margin-bottom: 16px; border: 1px solid #334155; }
+label { display: block; margin-bottom: 12px; }
+input[type="file"], input[type="text"], input[type="number"] { width: 100%; padding: 8px; margin-top: 4px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; }
+button { padding: 10px 16px; border: none; border-radius: 10px; background: linear-gradient(135deg, #38bdf8, #6366f1); color: #0b1224; font-weight: 700; cursor: pointer; }
+button:hover { filter: brightness(1.05); }
+#status { margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+th, td { border: 1px solid #334155; padding: 8px; text-align: right; }
+th { background: #0b1224; }
+tr:nth-child(every) { background: #0f172a; }

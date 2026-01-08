@@ -1,5 +1,7 @@
 # DADDY AYAAN BIG SUCCESS BASNET WindRecon: Physics-Informed ML for Post-Flight Wind Shear Reconstruction
 
+THESE README NEEDS TO BE ENAHNCED EVEN MORE FOR THE RESEARCH PAPER I PUT THE PAPER IN THE READ ME DADDY AYAAN BASNET
+
 An end-to-end reference implementation of the system described in `AI_wind_shear_reconstruction_paper.md`: a physics-informed neural model that reconstructs vertical wind shear profiles from model rocket telemetry. The stack includes synthetic data generation, training with physics losses, and post-flight inference.
 
 ## Features
